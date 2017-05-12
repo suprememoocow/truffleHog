@@ -1,4 +1,6 @@
 #!/usr/bin/env python
+# -*- coding: utf-8 -*-
+
 import shutil
 import sys
 import math
@@ -125,7 +127,7 @@ def find_strings(git_url, printJson=False):
                     if path:
                         if not pathfilter(path):
                             continue
-                    printableDiff = blob.diff.decode()
+                    printableDiff = blob.diff.decode('utf-8', errors='replace')
                     if printableDiff.startswith("Binary files"):
                         continue
                     stringsFound = []
