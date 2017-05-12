@@ -7,6 +7,8 @@ import argparse
 import tempfile
 from git import Repo
 import json
+import os
+import stat
 
 if sys.version_info[0] == 2:
     reload(sys)  
@@ -16,6 +18,10 @@ BASE64_CHARS = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789+/
 HEX_CHARS = "1234567890abcdefABCDEF"
 
 file_filter_patterns = []
+
+def del_rw(action, name, exc):
+    os.chmod(name, stat.S_IWRITE)
+    os.remove(name)
 
 def pathfilter(path):
     for pat in file_filter_patterns:
@@ -149,6 +155,7 @@ def find_strings(git_url, output):
                     
             prev_commit = curr_commit
     shutil.rmtree(project_path)
+    return project_path
 
 if __name__ == "__main__":
     parser = argparse.ArgumentParser(description='Find secrets hidden in the depths of git.')
@@ -165,4 +172,6 @@ if __name__ == "__main__":
         pass
 
     args = parser.parse_args()
-    find_strings(args.git_url, args.output_json)
+    project_path = find_strings(args.git_url, args.output_json)
+    shutil.rmtree(project_path, onerror=del_rw)
+
