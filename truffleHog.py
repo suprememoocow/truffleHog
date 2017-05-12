@@ -1,5 +1,10 @@
 #!/usr/bin/env python
-import shutil, sys, math, string, datetime, argparse, tempfile, os, fnmatch
+import shutil
+import sys
+import math
+import datetime
+import argparse
+import tempfile
 from git import Repo
 import json
 
